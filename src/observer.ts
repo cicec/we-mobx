@@ -6,6 +6,16 @@ type PageOptions = WechatMiniprogram.Page.Options<AnyObject, AnyObject>
 
 const isFunc = (a: unknown): a is Function => typeof a === 'function'
 
+const toEntireJS = (source: AnyObject) => {
+  const target: AnyObject = {}
+
+  Object.getOwnPropertyNames(source).forEach((key) => {
+    target[key] = toJS(source[key])
+  })
+
+  return target
+}
+
 const observer = {
   page(store: AnyObject) {
     return (options: PageOptions) => {
@@ -17,12 +27,12 @@ const observer = {
 
       return Page({
         ...options,
-        data: { ...data, store: toJS(store) },
+        data: { ...data, store: toEntireJS(store) },
 
         onLoad(query) {
           dispose = autorun(() => {
             if (this.data) {
-              const diffs: AnyObject = diff(toJS(store), this.data.store)
+              const diffs: AnyObject = diff(toEntireJS(store), this.data.store)
 
               for (const key in diffs) {
                 this.setData({ ['store.' + key]: diffs[key] })
@@ -52,12 +62,12 @@ const observer = {
 
       return Component({
         ...options,
-        data: { ...data, store: toJS(store) },
+        data: { ...data, store: toEntireJS(store) },
 
         attached() {
           dispose = autorun(() => {
             if (this.data) {
-              const diffs: AnyObject = diff(toJS(store), this.data.store)
+              const diffs: AnyObject = diff(toEntireJS(store), this.data.store)
 
               for (const key in diffs) {
                 this.setData({ ['store.' + key]: diffs[key] })
