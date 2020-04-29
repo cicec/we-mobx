@@ -1,0 +1,12 @@
+{
+  "name": "we-mobx",
+  "version": "0.1.0",
+  "license": "MIT",
+  "dependencies": {
+    "mobx": "^5.15.4"
+  },
+  "devDependencies": {
+    "miniprogram-api-typings": "^2.10.4",
+    "typescript": "^3.8.3"
+  }
+}

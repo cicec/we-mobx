@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "es6",
+    "target": "es5",
+    "lib": ["esnext", "dom"],
+    "typeRoots": ["./typings", "./node_modules/@types", "./node_modules/miniprogram-api-typings"],
+    "moduleResolution": "node",
+    "allowJs": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules"]
+}
