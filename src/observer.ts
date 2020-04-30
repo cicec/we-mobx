@@ -6,7 +6,7 @@ type PageOptions = WechatMiniprogram.Page.Options<AnyObject, AnyObject>
 
 const isFunc = (a: unknown): a is Function => typeof a === 'function'
 
-const toEntireJS = (source: AnyObject) => {
+const toData = (source: AnyObject) => {
   const target: AnyObject = {}
 
   Object.getOwnPropertyNames(source).forEach((key) => {
@@ -21,21 +21,19 @@ const observer = {
     return (options: PageOptions) => {
       let dispose: IReactionDisposer
 
-      const data = options.data || {}
-      const onLoad = options.onLoad
-      const onUnload = options.onUnload
+      const { data = {}, onLoad, onUnload } = options
 
       return Page({
         ...options,
-        data: { ...data, store: toEntireJS(store) },
+        data: { ...data, ...toData(store) },
 
         onLoad(query) {
           dispose = autorun(() => {
             if (this.data) {
-              const diffs: AnyObject = diff(toEntireJS(store), this.data.store)
+              const diffs: AnyObject = diff({ ...this.data, ...toData(store) }, this.data)
 
               for (const key in diffs) {
-                this.setData({ ['store.' + key]: diffs[key] })
+                if (key) this.setData({ [key]: diffs[key] })
               }
             }
           })
@@ -56,21 +54,19 @@ const observer = {
     return (options: ComponentOptions) => {
       let dispose: IReactionDisposer
 
-      const data = options.data || {}
-      const attached = options.attached
-      const detached = options.detached
+      const { data = {}, attached, detached } = options
 
       return Component({
         ...options,
-        data: { ...data, store: toEntireJS(store) },
+        data: { ...data, ...toData(store) },
 
         attached() {
           dispose = autorun(() => {
             if (this.data) {
-              const diffs: AnyObject = diff(toEntireJS(store), this.data.store)
+              const diffs: AnyObject = diff({ ...this.data, ...toData(store) }, this.data)
 
               for (const key in diffs) {
-                this.setData({ ['store.' + key]: diffs[key] })
+                if (key) this.setData({ [key]: diffs[key] })
               }
             }
           })
