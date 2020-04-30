@@ -1,19 +1,32 @@
-import { autorun, toJS, IReactionDisposer } from 'mobx'
+import { autorun, toJS, isObservable, IReactionDisposer } from 'mobx'
 import diff from './diff'
 
 type ComponentOptions = WechatMiniprogram.Component.Options<AnyObject, AnyObject, AnyObject>
 type PageOptions = WechatMiniprogram.Page.Options<AnyObject, AnyObject>
 
-const isFunc = (a: unknown): a is Function => typeof a === 'function'
+const is = {
+  fun: (a: unknown): a is Function => typeof a === 'function',
+  obj: (a: unknown): a is AnyObject => Object.prototype.toString.call(a) === '[object Object]',
+}
 
-const toData = (source: AnyObject) => {
+const mapProps = (source: AnyObject) => (operation: Function) => {
   const target: AnyObject = {}
 
-  Object.getOwnPropertyNames(source).forEach((key) => {
-    target[key] = toJS(source[key])
-  })
+  Object.getOwnPropertyNames(source)
+    .filter((key) => !is.fun(source[key]))
+    .forEach((key) => {
+      target[key] = operation(source[key])
+    })
 
   return target
+}
+
+const toData = (source: any) => {
+  if (is.obj(source)) {
+    return mapProps(source)(isObservable(source) ? toJS : toData)
+  }
+
+  return source
 }
 
 const observer = {
@@ -38,13 +51,13 @@ const observer = {
             }
           })
 
-          if (isFunc(onLoad)) onLoad.call(this, query)
+          if (is.fun(onLoad)) onLoad.call(this, query)
         },
 
         onUnload() {
           if (dispose) dispose()
 
-          if (isFunc(onUnload)) onUnload.call(this)
+          if (is.fun(onUnload)) onUnload.call(this)
         },
       })
     }
@@ -71,13 +84,13 @@ const observer = {
             }
           })
 
-          if (isFunc(attached)) attached.call(this)
+          if (is.fun(attached)) attached.call(this)
         },
 
         detached() {
           if (dispose) dispose()
 
-          if (isFunc(detached)) detached.call(this)
+          if (is.fun(detached)) detached.call(this)
         },
       })
     }
