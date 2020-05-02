@@ -65,7 +65,7 @@ export default new TodoList()
 #### 然后可以在页面中直接引入
 
 ```ts
-import observer from 'we-mobx'
+import { observer } from 'we-mobx'
 import store from '../../store/index'
 
 observer.page(store)({
@@ -94,7 +94,7 @@ observer.page(store)({
   </view>
 </view>
 
-<button class="cu-btn lines-cyan lg round" bindtap="addTodo">添加</button>
+<button bindtap="addTodo">添加</button>
 ```
 
 ### 🌟 Tips
