@@ -1,3 +1,8 @@
+## 0.0.2 (2020-05-03)
+
+* feat: add provider & inject ([c2ffb74](https://github.com/clancysong/we-mobx/commit/c2ffb74))
+
+
 ## 0.0.1 (2020-05-01)
 
 
