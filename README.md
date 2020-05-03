@@ -20,10 +20,78 @@ yarn add mobx we-mobx
 
 ## 📖 API
 
-- `observer.page(store)(options)` 创建页面
-- `observer.component(store)(options)` 创建组件
+#### `provider(stores)(options)`
 
-## 🏀 示例
+为小程序传递 stores 的全局引用，options 为 `App()` 的选项参数。
+
+```ts
+import { provider } from 'we-mobx'
+import stores from './store/index'
+
+provider(stores)({
+  ...
+})
+```
+
+#### `inject.page(...storeName[])(createOptions)`
+
+为页面注入需被监听的 store。stores 的直接引用会通过 createOptions 的参数传入，需返回 `Page()` 的选项参数。
+
+```ts
+inject.page('storeA', 'storeB')(({ storeA, storeB }) => ({
+  onLoad() {
+    storeA.count
+  },
+
+  ...
+}))
+```
+
+#### `inject.component(...storeName[])(createOptions)`
+
+同上，为组件注入需被监听的 store。
+
+```ts
+inject.component('storeA', 'storeB')(({ storeA, storeB }) => ({
+  attached() {
+    todos.count
+  },
+
+  ...
+}))
+```
+
+#### `observer.page(stores)(options)`
+
+使页面监听一个或多个 store。
+
+与 inject 的不同之处在于，observer 无需调用 provider 进行全局注入，但需要在页面文件中手动引入 store 对象并传入。
+
+```ts
+observer.page({ todos })({
+  onLoad() {
+    todos.count
+  },
+
+  ...
+})
+```
+
+#### `observer.component(stores)(options)`
+
+同上，使组件监听一个或多个 store。
+
+```ts
+observer.component({ todos })({
+  attached() {
+    todos.count
+  },
+
+  ...
+})
+```
+
+## 🏀 使用
 
 #### 首先定义一个 store
 
@@ -62,13 +130,41 @@ class TodoList {
 export default new TodoList()
 ```
 
-#### 然后可以在页面中直接引入
+#### 然后传递全局 stores 并在页面中注入指定的 store
+
+```ts
+import { provider } from 'we-mobx'
+import stores from './store/index'
+
+provider(stores)({
+  ...
+})
+```
+
+```ts
+import { inject } from 'we-mobx'
+
+inject.page('todos')(({ todos }) => ({
+  count: 0,
+
+  addTodo() {
+    todos.add('My Todo ' + ++this.count)
+  },
+
+  toggleCompleted(e: any) {
+    const { id } = e.currentTarget.dataset
+    todos.toggle(id)
+  },
+}))
+```
+
+#### 如果使用 observer，则需要传入需监听 store 对象
 
 ```ts
 import { observer } from 'we-mobx'
-import store from '../../store/index'
+import { todos } from '../../store/index'
 
-observer.page(store)({
+observer.page({ todos })({
   count: 0,
 
   addTodo() {
@@ -85,7 +181,7 @@ observer.page(store)({
 #### store 中的状态会被映射至 data 中，直接在 wxml 中引用
 
 ```html
-<view wx:for="{{ todos }}" wx:key="id" data-id="{{ item.id }}" bindtap="toggleCompleted">
+<view wx:for="{{ todos.todos }}" wx:key="id" data-id="{{ item.id }}" bindtap="toggleCompleted">
   <view>
     <view>
       <text>{{ item.title }}</text>
@@ -97,40 +193,18 @@ observer.page(store)({
 <button bindtap="addTodo">添加</button>
 ```
 
-### 🌟 Tips
+## 🌟FAQ
 
-如果只想将 store 映射至 data 单独的一个属性中，可以这样传入
+### 应该使用 provider & inject 的方式，还是使用 observer ？
 
-```ts
-observer.page({ store })({
-  onLoad() {
-    this.data.store.todos
-  }
+更推荐 provider & inject 这样组合调用的方式，而 observer 相对来说调用更直观。
 
-  ...
-})
-```
+### 在 provider 或 observer 传入的 stores 结构应该是怎样的？
 
-对于多个 store 的引用，当然可以这样传入
+在 provider 中需要传入全部 stores 的引用，并且需遵循 `stores: { storeA, storeB }` 这样的格式。
 
-```ts
-observer.page({ a: storeA, b: storeB })({
-  onLoad() {
-    this.data.a.todos
-  }
-
-  ...
-})
-```
-
-多层的嵌套也是可行的，但不建议这样做
-
-另外，请保证传递的结构中包含 store 对象的直接引用，而非通过枚举操作（拓展操作符、Object.assign 等）复制产生的新的引用，这样可能会导致 store 中不可枚举属性的丢失
-
-```ts
-observer.page(store)({}) // good
-observer.page({ ...store })({}) // bad
-```
+在 observer 中传递的结构与 provider 中类似，但只需传递需被监听的 store。另外在 observer
+中传递多层的嵌套也是可行的，但不建议这样做。
 
 ## 📄 License
 
