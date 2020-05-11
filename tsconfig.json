@@ -4,7 +4,7 @@
     "module": "es6",
     "target": "es5",
     "lib": ["esnext", "dom"],
-    "typeRoots": ["./typings", "./node_modules/@types", "./node_modules/miniprogram-api-typings"],
+    "typeRoots": ["./node_modules/@types", "./node_modules/miniprogram-api-typings"],
     "moduleResolution": "node",
     "allowJs": false,
     "noImplicitReturns": true,
