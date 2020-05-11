@@ -1,6 +1,21 @@
-## 0.0.2 (2020-05-03)
+## [0.0.3](https://github.com/clancysong/we-mobx/compare/v0.0.2...v0.0.3) (2020-05-11)
 
-* feat: add provider & inject ([c2ffb74](https://github.com/clancysong/we-mobx/commit/c2ffb74))
+
+### Bug Fixes
+
+* data update exception ([b402577](https://github.com/clancysong/we-mobx/commit/b402577bac7a1284c01c4d3039b411df5684fe45))
+
+
+### Features
+
+* add support for map & set data type ([ffe65df](https://github.com/clancysong/we-mobx/commit/ffe65df47f81b97b2d1818d17dc76cb4ca8f6359))
+
+
+## [0.0.2](https://github.com/clancysong/we-mobx/compare/v0.0.1...v0.0.2) (2020-05-03)
+
+### Features
+
+* add provider & inject ([c2ffb74](https://github.com/clancysong/we-mobx/commit/c2ffb74))
 
 
 ## 0.0.1 (2020-05-01)

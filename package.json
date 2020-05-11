@@ -1,6 +1,6 @@
 {
   "name": "we-mobx",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "license": "MIT",
@@ -13,7 +13,8 @@
     "url": "https://github.com/clancysong/we-mobx.git"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "mobx": "^5.15.4"
