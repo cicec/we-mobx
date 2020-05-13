@@ -1,6 +1,7 @@
-type AppOptions = WechatMiniprogram.App.Options<AnyObject>
+type AppOptions<T> = WechatMiniprogram.App.Options<T>
 
-const provider = <T extends AnyObject>(stores: T) => (options: AppOptions) =>
-  App({ ...options, stores })
+const provider = <TStores extends AnyObject>(stores: TStores) => <TAppOptions extends AnyObject>(
+  options: AppOptions<TAppOptions>
+) => App({ ...options, stores })
 
 export default provider

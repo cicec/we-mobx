@@ -1,28 +1,22 @@
-import create from './create'
-import { toData } from './utils'
+const mapStores = <TStores extends AnyObject>(names: (keyof TStores)[]) => (source: TStores) => {
+  const target: TStores = {} as TStores
 
-const mapStores = (names: string[]) => (source: AnyObject) => {
-  const target: AnyObject = {}
-
-  names.forEach((key) => {
+  names.forEach(key => {
     if (source && source[key]) {
-      target[key] = toData(source[key])
+      target[key] = source[key]
     }
   })
 
   return target
 }
 
-const inject = {
-  page: (...storeNames: string[]) => (
-    createOptions: (stores: AnyObject) => PageOptions
-  ) =>
-    create.page(getApp().stores, mapStores(storeNames), createOptions(getApp().stores)),
+const inject = <TStores extends AnyObject>(...storeNames: (keyof TStores)[]) => (
+  createObserver: (stores: TStores) => (observedStores: AnyObject) => void | string
+) => {
+  const stores = getApp().stores ?? {}
+  const observedStores = mapStores(storeNames)(stores)
 
-  component: (...storeNames: string[]) => (
-    createOptions: (stores: AnyObject) => ComponentOptions
-  ) =>
-    create.component(getApp().stores, mapStores(storeNames), createOptions(getApp().stores)),
+  return createObserver(stores)(observedStores)
 }
 
 export default inject
