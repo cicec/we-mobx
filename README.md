@@ -28,72 +28,50 @@ yarn add mobx we-mobx
 import { provider } from 'we-mobx'
 import stores from './store/index'
 
-provider(stores)({
+const App = provider(stores)
+
+App<IAppOption>({
   ...
 })
 ```
 
-#### `inject.page(...storeName[])(createOptions)`
+#### `observer.page(options)(observedStores)`
 
-为页面注入需被监听的 store。stores 的直接引用会通过 createOptions 的参数传入，需返回 `Page()` 的选项参数。
+#### `observer.component(options)(observedStores)`
 
-```ts
-inject.page('storeA', 'storeB')(({ storeA, storeB }) => ({
-  onLoad() {
-    storeA.count
-  },
+options 为页面或组件的选项参数，observedStores 为需被监听的 stores 对象，调用后会完成页面和组件的声明。
 
-  ...
-}))
-```
-
-#### `inject.component(...storeName[])(createOptions)`
-
-同上，为组件注入需被监听的 store。
+单独使用时需要调用 observe 完成页面声明，此时需要将 store 对象的直接引用作为参数 observedStores 传入。在 inject 中使用时则不需要，observedStores 的传递与 observe 的调用会在 inject 内部进行。
 
 ```ts
-inject.component('storeA', 'storeB')(({ storeA, storeB }) => ({
-  attached() {
-    todos.count
-  },
+import { observer } from 'we-mobx'
 
-  ...
-}))
-```
-
-#### `observer.page(stores)(options)`
-
-使页面监听一个或多个 store。
-
-与 inject 的不同之处在于，observer 无需调用 provider 进行全局注入，但需要在页面文件中手动引入 store 对象并传入。
-
-```ts
-observer.page({ todos })({
-  onLoad() {
-    todos.count
-  },
-
+const observe = observer.page({
   ...
 })
+
+observe({ storeA, storeB })
 ```
 
-#### `observer.component(stores)(options)`
+#### `inject.page(...storeName[])(createObserver)`
 
-同上，使组件监听一个或多个 store。
+为页面注入需被监听的 store。调用前需要使用 provider 将 stores 全局引入。
+
+createObserver 的参数为 stores 的直接引用，返回值为 observer 函数调用返回的 observe 函数。此时无需再次调用 observe 函数指定监听对象，inject 会自动完成需被监听的 stores 的注入。
 
 ```ts
-observer.component({ todos })({
-  attached() {
-    todos.count
-  },
+import { inject } from 'we-mobx'
 
-  ...
-})
+inject<Stores>('storeA', 'storeB')(({ storeA }) =>
+  observer.page({
+    ...
+  })
+)
 ```
 
 ## 🏀 使用
 
-#### 首先定义一个 store
+#### 定义一个 store
 
 ```ts
 import { observable, computed, action } from 'mobx'
@@ -109,7 +87,7 @@ class Todo {
   }
 }
 
-class TodoList {
+class TodoStore {
   @observable todos: Todo[] = []
 
   @action
@@ -118,8 +96,16 @@ class TodoList {
   }
 
   @action
+  remove(id: number) {
+    this.todos.splice(
+      this.todos.findIndex(todo => todo.id === id),
+      1
+    )
+  }
+
+  @action
   toggle(id: number) {
-    const todo = this.todos.find((item) => item.id === id)
+    const todo = this.todos.find(item => item.id === id)
 
     if (todo) {
       todo.completed = !todo.completed
@@ -127,16 +113,18 @@ class TodoList {
   }
 }
 
-export default new TodoList()
+export default new TodoStore()
 ```
 
-#### 然后传递全局 stores 并在页面中注入指定的 store
+#### 传递全局 stores 并在页面中注入指定的 store
 
 ```ts
 import { provider } from 'we-mobx'
-import stores from './store/index'
+import { todoStore } from './store/index'
 
-provider(stores)({
+const App = provider({ todoStore })
+
+App<IAppOption>({
   ...
 })
 ```
@@ -144,44 +132,58 @@ provider(stores)({
 ```ts
 import { inject } from 'we-mobx'
 
-inject.page('todos')(({ todos }) => ({
-  count: 0,
+inject.page<Stores>('todoStore')(({ todoStore }) =>
+  observer.page({
+    count: 0,
 
-  addTodo() {
-    todos.add('My Todo ' + ++this.count)
-  },
+    addTodo() {
+      todoStore.add('My Todo ' + ++this.count)
+    },
 
-  toggleCompleted(e: any) {
-    const { id } = e.currentTarget.dataset
-    todos.toggle(id)
-  },
-}))
+    removeTodo(e: any) {
+      const { id } = e.currentTarget.dataset
+      todoStore.remove(id)
+    },
+
+    toggleCompleted(e: any) {
+      const { id } = e.currentTarget.dataset
+      todoStore.toggle(id)
+    },
+  })
+)
 ```
 
-#### 如果使用 observer，则需要传入需监听 store 对象
+#### 如果只使用 observer，则需要再次调用以传入需监听的 store 对象
 
 ```ts
 import { observer } from 'we-mobx'
-import { todos } from '../../store/index'
+import { todoStore } from '../../store/index'
 
-observer.page({ todos })({
+const observe = observer.page({
   count: 0,
 
   addTodo() {
-    store.add('My Todo ' + ++this.count)
+    todoStore.add('My Todo ' + ++this.count)
+  },
+
+  removeTodo(e: any) {
+    const { id } = e.currentTarget.dataset
+    todoStore.remove(id)
   },
 
   toggleCompleted(e: any) {
     const { id } = e.currentTarget.dataset
-    store.toggle(id)
+    todoStore.toggle(id)
   },
 })
+
+observe({ todoStore })
 ```
 
 #### store 中的状态会被映射至 data 中，直接在 wxml 中引用
 
 ```html
-<view wx:for="{{ todos.todos }}" wx:key="id" data-id="{{ item.id }}" bindtap="toggleCompleted">
+<view wx:for="{{ todoStore.todos }}" wx:key="id" data-id="{{ item.id }}" bindtap="toggleCompleted">
   <view>
     <view>
       <text>{{ item.title }}</text>
@@ -193,18 +195,17 @@ observer.page({ todos })({
 <button bindtap="addTodo">添加</button>
 ```
 
-## 🌟FAQ
+## 🌟 FAQ
 
-### 应该使用 provider & inject 的方式，还是使用 observer ？
+### 应该使用 provider & inject 的方式，还是直接使用 observer ？
 
-更推荐 provider & inject 这样组合调用的方式，而 observer 相对来说调用更直观。
+推荐 provider & inject 这样的引入方式。如果只想在特定的页面引入 store，或是偏好更灵活直观的调用方式，可以只使用 observer。
 
 ### 在 provider 或 observer 传入的 stores 结构应该是怎样的？
 
 在 provider 中需要传入全部 stores 的引用，并且需遵循 `stores: { storeA, storeB }` 这样的格式。
 
-在 observer 中传递的结构与 provider 中类似，但只需传递需被监听的 store。另外在 observer
-中传递多层的嵌套也是可行的，但不建议这样做。
+在 observer 中传递的结构与 provider 中类似，但只需传递需被监听的 store。
 
 ## 📄 License
 
