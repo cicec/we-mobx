@@ -138,7 +138,7 @@ App<IAppOption>({
 ```ts
 import { inject } from 'we-mobx'
 
-inject.page<Stores>('todoStore')(({ todoStore }) =>
+inject<Stores>('todoStore')(({ todoStore }) =>
   observer.page({
     count: 0,
 
