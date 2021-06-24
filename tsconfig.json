@@ -13,7 +13,8 @@
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "declaration": true
+    "declaration": true,
+    "sourceMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]
