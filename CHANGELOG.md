@@ -1,3 +1,7 @@
+## [0.1.1](https://github.com/clancysong/we-mobx/compare/v0.1.0...v0.1.1) (2021-06-28)
+
+
+
 # [0.1.0](https://github.com/clancysong/we-mobx/compare/v0.0.4...v0.1.0) (2020-05-14)
 
 
