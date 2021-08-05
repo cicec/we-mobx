@@ -18,10 +18,11 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "mobx": "^5.15.4"
+    "mobx": "^4.15.7"
   },
   "devDependencies": {
-    "miniprogram-api-typings": "^2.10.4",
-    "typescript": "^3.8.3"
+    "conventional-changelog-cli": "^2.1.1",
+    "miniprogram-api-typings": "^3.4.2",
+    "typescript": "^4.3.5"
   }
 }
