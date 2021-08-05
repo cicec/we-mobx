@@ -3,8 +3,11 @@ import { is, toData } from './utils'
 import diff from './diff'
 
 const observer = {
-  page: <TData extends DataOption, TCustom extends CustomOption>(
-    options: PageOptions<TData, TCustom>
+  page: <
+    TData extends WechatMiniprogram.Page.DataOption,
+    TCustom extends WechatMiniprogram.Page.CustomOption
+  >(
+    options: WechatMiniprogram.Page.Options<TData, TCustom>
   ) => {
     let dispose: IReactionDisposer
 
@@ -36,11 +39,11 @@ const observer = {
   },
 
   component: <
-    TData extends DataOption,
-    TProperty extends PropertyOption,
-    TMethod extends MethodOption
+    TData extends WechatMiniprogram.Component.DataOption,
+    TProperty extends WechatMiniprogram.Component.PropertyOption,
+    TMethod extends WechatMiniprogram.Component.MethodOption
   >(
-    options: ComponentOptions<TData, TProperty, TMethod>
+    options: WechatMiniprogram.Component.Options<TData, TProperty, TMethod>
   ) => {
     let dispose: IReactionDisposer
 
