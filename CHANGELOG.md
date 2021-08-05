@@ -1,3 +1,12 @@
+## [0.1.2](https://github.com/clancysong/we-mobx/compare/v0.1.1...v0.1.2) (2021-08-05)
+
+
+### Bug Fixes
+
+* call stack maximum size in mobx4 ([b5d2abf](https://github.com/clancysong/we-mobx/commit/b5d2abfbde243b479b14789a39a637c9e121a36e))
+
+
+
 ## [0.1.1](https://github.com/clancysong/we-mobx/compare/v0.1.0...v0.1.1) (2021-06-28)
 
 
