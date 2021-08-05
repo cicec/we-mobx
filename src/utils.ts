@@ -18,9 +18,9 @@ export const toData = (source: any): any => {
   if (is.obj(source)) {
     const target: AnyObject = {}
 
-    Object.getOwnPropertyNames(source).forEach((key) => {
+    for (const key in source) {
       target[key] = toData(source[key])
-    })
+    }
 
     return target
   }
