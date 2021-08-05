@@ -1,3 +1,12 @@
+## [0.1.3](https://github.com/clancysong/we-mobx/compare/v0.1.2...v0.1.3) (2021-08-05)
+
+
+### Bug Fixes
+
+* wechat miniprogram types ([95d0188](https://github.com/clancysong/we-mobx/commit/95d0188a0fc8443701f1a2e2af39cdbc13101fb2))
+
+
+
 ## [0.1.2](https://github.com/clancysong/we-mobx/compare/v0.1.1...v0.1.2) (2021-08-05)
 
 
