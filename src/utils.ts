@@ -6,21 +6,27 @@ export const is = {
   map: (a: unknown): a is Map<any, any> => Object.prototype.toString.call(a) === '[object Map]',
 }
 
+const getPropertyNames = (o: AnyObject) => {
+  const propertiesInMobx = ['__mobxDidRunLazyInitializers', '$mobx']
+
+  return Object.getOwnPropertyNames(o).filter(prop => !propertiesInMobx.includes(prop))
+}
+
 export const toData = (source: any): any => {
   if (is.arr(source)) {
-    return source.map((item) => toData(item))
+    return source.map(item => toData(item))
   }
 
   if (is.set(source)) {
-    return Array.from(source).map((item) => toData(item))
+    return Array.from(source).map(item => toData(item))
   }
 
   if (is.obj(source)) {
     const target: AnyObject = {}
 
-    for (const key in source) {
+    getPropertyNames(source).forEach(key => {
       target[key] = toData(source[key])
-    }
+    })
 
     return target
   }
@@ -29,7 +35,7 @@ export const toData = (source: any): any => {
     const obj = Object.fromEntries(source)
     const target: AnyObject = {}
 
-    Object.getOwnPropertyNames(obj).forEach((key) => {
+    getPropertyNames(source).forEach(key => {
       target[key] = toData(obj[key])
     })
 
