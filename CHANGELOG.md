@@ -1,3 +1,12 @@
+## [0.1.4](https://github.com/clancysong/we-mobx/compare/v0.1.3...v0.1.4) (2021-08-16)
+
+
+### Bug Fixes
+
+* getters are not injected ([6db3331](https://github.com/clancysong/we-mobx/commit/6db333195ce151edb086fd1be5c1dc8d54b07ea9))
+
+
+
 ## [0.1.3](https://github.com/clancysong/we-mobx/compare/v0.1.2...v0.1.3) (2021-08-05)
 
 
