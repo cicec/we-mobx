@@ -1,3 +1,12 @@
+## [0.1.5](https://github.com/clancysong/we-mobx/compare/v0.1.4...v0.1.5) (2021-08-17)
+
+
+### Bug Fixes
+
+* exception status reference ([e20fcb1](https://github.com/clancysong/we-mobx/commit/e20fcb19ce18cc5d1a157634a6af92460b1cfe3f))
+
+
+
 ## [0.1.4](https://github.com/clancysong/we-mobx/compare/v0.1.3...v0.1.4) (2021-08-16)
 
 
