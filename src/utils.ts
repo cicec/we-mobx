@@ -1,3 +1,5 @@
+import { toJS } from 'mobx'
+
 export const is = {
   fun: (a: unknown): a is Function => typeof a === 'function',
   arr: (a: unknown): a is [] => Array.isArray(a),
@@ -25,7 +27,7 @@ export const toData = (source: any): any => {
     const target: AnyObject = {}
 
     getPropertyNames(source).forEach(key => {
-      target[key] = toData(source[key])
+      target[key] = toJS(toData(source[key]))
     })
 
     return target
@@ -35,8 +37,8 @@ export const toData = (source: any): any => {
     const obj = Object.fromEntries(source)
     const target: AnyObject = {}
 
-    getPropertyNames(source).forEach(key => {
-      target[key] = toData(obj[key])
+    getPropertyNames(obj).forEach(key => {
+      target[key] = toJS(toData(obj[key]))
     })
 
     return target
