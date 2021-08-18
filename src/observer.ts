@@ -47,29 +47,39 @@ const observer = {
   ) => {
     let dispose: IReactionDisposer
 
-    const { data = {}, attached, detached } = options
+    const { data = {}, lifetimes } = options
+
+    const attached = lifetimes?.attached ?? options.attached
+    const detached = lifetimes?.attached ?? options.detached
 
     return (observedStores: AnyObject = {}) =>
       Component({
         ...options,
         data: { ...data, ...toData(observedStores) },
 
-        attached() {
-          dispose = autorun(() => {
-            if (this.data) {
-              const diffs: AnyObject = diff({ ...this.data, ...toData(observedStores) }, this.data)
+        lifetimes: {
+          ...lifetimes,
 
-              this.setData(diffs)
-            }
-          })
+          attached() {
+            dispose = autorun(() => {
+              if (this.data) {
+                const diffs: AnyObject = diff(
+                  { ...this.data, ...toData(observedStores) },
+                  this.data
+                )
 
-          if (is.fun(attached)) attached.call(this)
-        },
+                this.setData(diffs)
+              }
+            })
 
-        detached() {
-          if (dispose) dispose()
+            if (is.fun(attached)) attached.call(this)
+          },
 
-          if (is.fun(detached)) detached.call(this)
+          detached() {
+            if (dispose) dispose()
+
+            if (is.fun(detached)) detached.call(this)
+          },
         },
       })
   },
