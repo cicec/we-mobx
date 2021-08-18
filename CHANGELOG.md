@@ -1,3 +1,12 @@
+## [0.1.6](https://github.com/clancysong/we-mobx/compare/v0.1.5...v0.1.6) (2021-08-18)
+
+
+### Bug Fixes
+
+* **observer:** attached & detached in component lifetimes ([fb072f8](https://github.com/clancysong/we-mobx/commit/fb072f844d47be989d1225ff8ca9803e20359431))
+
+
+
 ## [0.1.5](https://github.com/clancysong/we-mobx/compare/v0.1.4...v0.1.5) (2021-08-17)
 
 
