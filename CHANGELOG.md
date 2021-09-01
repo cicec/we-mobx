@@ -46,17 +46,18 @@
 ## [0.1.1](https://github.com/clancysong/we-mobx/compare/v0.1.0...v0.1.1) (2021-06-28)
 
 
+### Features
 
-# [0.1.0](https://github.com/clancysong/we-mobx/compare/v0.0.4...v0.1.0) (2020-05-14)
+* sourcemap ([6848c966](https://github.com/cicec/we-mobx/commit/6848c966aba181344feda511ed352c81c7611a19))
+
+
+
+## [0.1.0](https://github.com/clancysong/we-mobx/compare/v0.0.4...v0.1.0) (2020-05-14)
 
 
 ### Features
 
 * change inject & observer, perfect types ([8370006](https://github.com/clancysong/we-mobx/commit/8370006d6a9958577e220101e8b66fef4ab90195))
-
-
-
-## [0.0.4](https://github.com/clancysong/we-mobx/compare/v0.0.3...v0.0.4) (2020-05-11)
 
 
 
